@@ -8,3 +8,8 @@ Android 10からアプリがバックグランド中に位置情報を取得し�
 [link1](https://developer.android.com/about/versions/10/features#fg-service-types)
 [link2](https://developer.android.com/about/versions/10/highlights#privacy_for_users)
 [link3](https://developer.android.com/about/versions/10/privacy/changes#app-access-device-location)
+
+# アプリのforeground/backgroundで位置情報を取得できるか確認
+| device | foreground | background |
+|:---|:---:|:---|
+|Pixel 5 OS:11 | OK | OK |
