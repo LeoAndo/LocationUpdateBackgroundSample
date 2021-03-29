@@ -1,12 +1,17 @@
 package com.template.locationupdatebackgroundsample
 
 import android.Manifest
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.location.LocationSettingsStates
+import com.template.locationupdatebackgroundsample.MyLocationManager.Companion.REQUEST_CHECK_SETTINGS
 
 class MainActivity : AppCompatActivity() {
     private var myLocationManager: MyLocationManager? = null
@@ -38,7 +43,11 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         myLocationManager = MyLocationManager.getInstance(this)
 
-        findViewById<Button>(R.id.button_access_background_location_on).setOnClickListener {
+
+        findViewById<Button>(R.id.buttonCheckLocationSetting).setOnClickListener {
+            myLocationManager?.checkLocationSettings(this@MainActivity)
+        }
+        findViewById<Button>(R.id.buttonAccessBackgroundLocation).setOnClickListener {
             requestBackgroundLocationPermission.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         }
         findViewById<Button>(R.id.buttonStart).setOnClickListener {
@@ -70,6 +79,32 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         myLocationManager?.stopLocationUpdates()
         super.onDestroy()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_CHECK_SETTINGS -> {
+                val message = when (resultCode) {
+                    Activity.RESULT_OK -> {
+                        "All required changes were successfully made."
+                    }
+                    Activity.RESULT_CANCELED -> {
+                        "The user was asked to change settings, but chose not to"
+                    }
+                    else -> "unknown..."
+                }
+                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                if (resultCode == Activity.RESULT_OK) {
+                    // クライアントが使用可能なロケーションプロバイダーに関心がある場合は、
+                    // LocationSettingsStates.fromIntent（Intent）を呼び出すことにより取得可能です。
+                    val states: LocationSettingsStates? =
+                        data?.let { LocationSettingsStates.fromIntent(it) }
+                    Log.d(LOG_TAG, "isGpsPresent: " + states?.isGpsPresent)
+                    Log.d(LOG_TAG, "isGpsUsable: " + states?.isGpsUsable)
+                }
+            }
+        }
     }
 
     companion object {
