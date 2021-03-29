@@ -3,6 +3,7 @@ package com.template.locationupdatebackgroundsample
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -47,6 +48,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonCheckLocationSetting).setOnClickListener {
             myLocationManager?.checkLocationSettings(this@MainActivity)
         }
+
+        val isEnabledBKLocationButton: Boolean = (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT)
+        findViewById<Button>(R.id.buttonAccessBackgroundLocation).isEnabled =
+            isEnabledBKLocationButton
         findViewById<Button>(R.id.buttonAccessBackgroundLocation).setOnClickListener {
             requestBackgroundLocationPermission.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         }
