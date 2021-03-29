@@ -10,7 +10,7 @@
         android:id="@+id/scroll"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_access_background_location_on"
+        app:layout_constraintBottom_toTopOf="@+id/buttonAccessBackgroundLocation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -22,13 +22,23 @@
     </ScrollView>
 
     <Button
-        android:id="@+id/button_access_background_location_on"
+        android:id="@+id/buttonAccessBackgroundLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCESS_BACKGROUND_LOCATION: ON"
-        app:layout_constraintBottom_toTopOf="@+id/buttonStart"
+        android:text="ACCESS_BACKGROUND_LOCATION"
+        app:layout_constraintTop_toBottomOf="@+id/scroll"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonCheckLocationSetting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="check Location setting"
+        app:layout_constraintBottom_toTopOf="@+id/buttonStart"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonAccessBackgroundLocation" />
 
     <Button
         android:id="@+id/buttonStart"
