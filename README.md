@@ -13,3 +13,6 @@ Android 10からアプリがバックグランド中に位置情報を取得し�
 | device | foreground | background |
 |:---|:---:|:---|
 |Pixel 5 OS:11 | OK | OK |
+|Pixel 4 OS:10 | OK | OK |
+|Pixel 4 OS:9 | OK | - |
+|Pixel 4 OS:8 | OK | - |
