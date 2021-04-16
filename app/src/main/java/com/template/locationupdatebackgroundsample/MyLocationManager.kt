@@ -162,7 +162,7 @@ class MyLocationManager private constructor(private val context: Context) {
         private var INSTANCE: MyLocationManager? = null
         fun getInstance(context: Context): MyLocationManager {
             return INSTANCE ?: synchronized(this) {
-                MyLocationManager(context).also { INSTANCE = it }
+                INSTANCE ?: MyLocationManager(context).also { INSTANCE = it }
             }
         }
 
