@@ -18,3 +18,9 @@ Android 10からアプリがバックグランド中に位置情報を取得し�
 |Pixel 4 OS:10 | OK | OK |
 |Pixel 4 OS:9 | OK | OK |
 |Pixel 4 OS:8 | OK | OK |
+
+# アプリの設定画面の選択項目もAndroid 10から「アプリの使用中のみ許可する」項目が追加された。
+
+「アプリの使用中のみ許可する」にチェックされていると、バックグラウンドでの位置情報を許可しないことになる
+
+<img src="https://user-images.githubusercontent.com/16476224/115006050-625da080-9ee3-11eb-8849-d72701fcdff9.png" width=320 />
