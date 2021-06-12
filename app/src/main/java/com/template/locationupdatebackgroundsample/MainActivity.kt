@@ -10,7 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.LocationSettingsStates
-import com.template.locationupdatebackgroundsample.MyForegroundLocationManager.Companion.REQUEST_CHECK_SETTINGS
+import com.template.locationupdatebackgroundsample.MyBackgroundLocationManager.Companion.REQUEST_CHECK_SETTINGS
 import com.template.locationupdatebackgroundsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
