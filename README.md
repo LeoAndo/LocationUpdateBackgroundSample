@@ -19,6 +19,9 @@ Android 10からアプリがバックグランド中に位置情報を取得し�
 |Pixel 4 OS:9 | OK | OK |
 |Pixel 4 OS:8 | OK | OK |
 
+## capture pixcel 4 OS:11
+<img src="https://user-images.githubusercontent.com/16476224/121790680-a8ea2580-cc1c-11eb-9a09-60137d6c13d8.png" width=320/>
+
 # アプリの設定画面の選択項目もAndroid 10から「アプリの使用中のみ許可する」項目が追加された。
 
 「アプリの使用中のみ許可する」にチェックされていると、バックグラウンドでの位置情報を行わない
