@@ -20,7 +20,7 @@ import com.google.android.gms.tasks.Task
 import java.util.concurrent.TimeUnit
 
 /**
- * アプリがバックグランドの時に位置情報取得するには、PendingIntentを使う.
+ * PendingIntentを使うパターン
  */
 class MyBackgroundLocationManager private constructor(private val context: Context) {
     private val locationClient: FusedLocationProviderClient
