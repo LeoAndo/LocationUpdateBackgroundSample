@@ -6,16 +6,15 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.LocationSettingsStates
-import com.template.locationupdatebackgroundsample.MyLocationManager.Companion.REQUEST_CHECK_SETTINGS
+import com.template.locationupdatebackgroundsample.MyForegroundLocationManager.Companion.REQUEST_CHECK_SETTINGS
+import com.template.locationupdatebackgroundsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private var myLocationManager: MyLocationManager? = null
+    private var myBackgroundLocationManager: MyBackgroundLocationManager? = null
 
     // Android 11以上の場合、Manifest.permission.ACCESS_BACKGROUND_LOCATION パーミッションは他の権限と一緒に要求すべきではない。
     // https://stackoverflow.com/questions/66475027/activityresultlauncher-with-requestmultiplepermissions-contract-doesnt-show-per
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity() {
     private val requestFineLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             Log.d(LOG_TAG, "granted: $granted")
-            myLocationManager?.startLocationUpdates()
+            myBackgroundLocationManager?.startLocationUpdates()
         }
     private val requestBackgroundLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -41,21 +40,20 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        myLocationManager = MyLocationManager.getInstance(this)
+        val binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        myBackgroundLocationManager = MyBackgroundLocationManager.getInstance(this)
 
-
-        findViewById<Button>(R.id.buttonCheckLocationSetting).setOnClickListener {
-            myLocationManager?.checkLocationSettings(this@MainActivity)
+        binding.buttonCheckLocationSetting.setOnClickListener {
+            myBackgroundLocationManager?.checkLocationSettings(this@MainActivity)
         }
 
         val isEnabledBKLocationButton: Boolean = (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT)
-        findViewById<Button>(R.id.buttonAccessBackgroundLocation).isEnabled =
-            isEnabledBKLocationButton
-        findViewById<Button>(R.id.buttonAccessBackgroundLocation).setOnClickListener {
+        binding.buttonAccessBackgroundLocation.isEnabled = isEnabledBKLocationButton
+        binding.buttonAccessBackgroundLocation.setOnClickListener {
             requestBackgroundLocationPermission.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         }
-        findViewById<Button>(R.id.buttonStart).setOnClickListener {
+        binding.buttonStart.setOnClickListener {
             /*
             requestLocationPermissions.launch(
                 arrayOf(
@@ -66,23 +64,24 @@ class MainActivity : AppCompatActivity() {
              */
             requestFineLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-        findViewById<Button>(R.id.buttonStop).setOnClickListener {
-            myLocationManager?.stopLocationUpdates()
+        binding.buttonStop.setOnClickListener {
+            myBackgroundLocationManager?.stopLocationUpdates()
         }
-        myLocationManager?.locations?.observe(this, {
+        myBackgroundLocationManager?.locations?.observe(this, {
+            Log.d(LOG_TAG, "observe")
             val text = StringBuilder()
-            text.append(findViewById<TextView>(R.id.textView).text).append("\n")
+            text.append(binding.textView.text).append("\n")
             it.forEach { locationData ->
-                text.append("lat: " + locationData.latitude + " lon: " + locationData.longitude + " isAppForeground: " + locationData.isAppForeground)
+                text.append("lat: ${locationData.latitude} lon: ${locationData.longitude} isAppForeground: ${locationData.isAppForeground} date: ${locationData.date}")
                 text.append("\n")
             }
 
-            findViewById<TextView>(R.id.textView).text = text
+            binding.textView.text = text
         })
     }
 
     override fun onDestroy() {
-        myLocationManager?.stopLocationUpdates()
+        myBackgroundLocationManager?.stopLocationUpdates()
         super.onDestroy()
     }
 

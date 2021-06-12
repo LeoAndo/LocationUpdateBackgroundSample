@@ -3,7 +3,6 @@ package com.template.locationupdatebackgroundsample
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityManager
 import android.content.Context
 import android.content.IntentSender
 import android.content.pm.PackageManager
@@ -16,10 +15,13 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
+import java.util.*
 import java.util.concurrent.TimeUnit
 
-
-class MyLocationManager private constructor(private val context: Context) {
+/**
+ * LocationCallbackを使う方法はアプリがフォアグランドの時にしか位置情報取得できない.
+ */
+class MyForegroundLocationManager private constructor(private val context: Context) {
     private val locationClient: FusedLocationProviderClient
         get() = LocationServices.getFusedLocationProviderClient(
             context
@@ -33,7 +35,8 @@ class MyLocationManager private constructor(private val context: Context) {
                     LocationData(
                         latitude = it.latitude,
                         longitude = it.longitude,
-                        isAppForeground = isAppInForeground(context)
+                        isAppForeground = Utils.isAppInForeground(context),
+                        date = Date(it.time)
                     )
                 }
         }
@@ -135,34 +138,15 @@ class MyLocationManager private constructor(private val context: Context) {
         locationClient.removeLocationUpdates(locationCallback)
     }
 
-    /**
-     * debugコード(本番コードには使用してはダメ).
-     * アプリが現在フォアグランド中かどうか判定する.
-     */
-    private fun isAppInForeground(context: Context): Boolean {
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val appProcesses = activityManager.runningAppProcesses ?: return false
-
-        appProcesses.forEach { appProcess ->
-            if (appProcess.importance ==
-                ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND &&
-                appProcess.processName == context.packageName
-            ) {
-                return true
-            }
-        }
-        return false
-    }
-
     companion object {
         const val LOG_TAG = "MyLocationManager"
 
         @SuppressLint("StaticFieldLeak")
         @Volatile
-        private var INSTANCE: MyLocationManager? = null
-        fun getInstance(context: Context): MyLocationManager {
+        private var INSTANCE: MyForegroundLocationManager? = null
+        fun getInstance(context: Context): MyForegroundLocationManager {
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: MyLocationManager(context).also { INSTANCE = it }
+                INSTANCE ?: MyForegroundLocationManager(context).also { INSTANCE = it }
             }
         }
 
