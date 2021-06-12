@@ -25,6 +25,7 @@ Android 10からアプリがバックグランド中に位置情報を取得し�
 # 実装メモ
 アプリがバックグランド時の位置情報取得には、PendingIntent & BroadcastReceiverの組み合わせで実装するhttps://github.com/LeoAndo/LocationUpdateBackgroundSample/blob/main/app/src/main/java/com/template/locationupdatebackgroundsample/MyBackgroundLocationManager.kt#L46
 https://github.com/LeoAndo/LocationUpdateBackgroundSample/blob/main/app/src/main/java/com/template/locationupdatebackgroundsample/MyBackgroundLocationUpdatesBroadcastReceiver.kt#L26
+もしくは、LocationCallbackを使う方法で実装する。
 
 # アプリの設定画面の選択項目もAndroid 10から「アプリの使用中のみ許可する」項目が追加された。
 
