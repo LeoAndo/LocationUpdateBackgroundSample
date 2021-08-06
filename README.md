@@ -1,17 +1,22 @@
-# LocationUpdateBackgroundSample
+
+# Overview
 sample for Get location in the background(Android 10 or later)
 
-Android 10からアプリがバックグランド中に位置情報を取得したい場合は、[ACCESS_BACKGROUND_LOCATION](https://developer.android.com/reference/android/Manifest.permission#ACCESS_BACKGROUND_LOCATION) の許可が必要になった。
+[日本語版README](https://github.com/LeoAndo/LocationUpdateBackgroundSample/blob/main/readme/README_JP.md)
 
-フォアグランドサービスが位置情報を扱う場合は、[foregroundServiceType](https://developer.android.com/reference/android/R.attr#foregroundServiceType)に`location`を指定する必要がある。
+# First of All
+If the app wants to get location information in the background from Android 10, it needs permission of [ACCESS_BACKGROUND_LOCATION](https://developer.android.com/reference/android/Manifest.permission#ACCESS_BACKGROUND_LOCATION).
+
+If the foreground service handles location information, you need to specify `location` in [foregroundServiceType](https://developer.android.com/reference/android/R.attr#foregroundServiceType).
 
 [link1](https://developer.android.com/about/versions/10/features#fg-service-types)
 [link2](https://developer.android.com/about/versions/10/highlights#privacy_for_users)
 [link3](https://developer.android.com/about/versions/10/privacy/changes#app-access-device-location)
 
-# アプリのforeground/backgroundで位置情報を取得できるか確認
+# Check if you can get location information in the foreground / background of the app
 
-ただし、background中はforegroundの時よりも位置情報の取得間隔が長かった
+**During the background, the location information acquisition interval was longer than during the foreground.**
+
 | device | foreground | background |
 |:---|:---:|:---|
 |Pixel 5 OS:11 | OK | OK |
@@ -22,16 +27,17 @@ Android 10からアプリがバックグランド中に位置情報を取得し�
 ## capture Pixel 4 OS:11
 <img src="https://user-images.githubusercontent.com/16476224/121790680-a8ea2580-cc1c-11eb-9a09-60137d6c13d8.png" width=320/>
 
-# 実装メモ
-アプリがバックグランド時の位置情報取得には、
-- `PendingIntent & BroadcastReceiver`の組み合わせで実装する。
+# Implemantation(Memo)
+
+To get location information when the app is in the background,
+- Implement with a combination of `PendingIntent & BroadcastReceiver`.
 https://github.com/LeoAndo/LocationUpdateBackgroundSample/tree/main/app/src/usePendingIntent/java/com/template/locationupdatebackgroundsample
-もしくは、
-- `LocationCallback`を使う方法で実装する。`LocationCallback`の方が実装量は少ない。
+or
+- **Implement by using `LocationCallback`. `LocationCallback` is less implemented.**
 https://github.com/LeoAndo/LocationUpdateBackgroundSample/tree/main/app/src/useLocationCallback/java/com/template/locationupdatebackgroundsample
 
-# アプリの設定画面の選択項目もAndroid 10から「アプリの使用中のみ許可する」項目が追加された。
+# From Android 10, the item "Allow only while using the app" has been added to the selection items on the app settings screen.
 
-「アプリの使用中のみ許可する」にチェックされていると、バックグラウンドでの位置情報を行わない
+If **"Allow only while using the app"** is checked, location information in the background will not be performed.
 
 <img src="https://user-images.githubusercontent.com/16476224/115006050-625da080-9ee3-11eb-8849-d72701fcdff9.png" width=320 />
