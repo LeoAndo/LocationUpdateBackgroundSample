@@ -33,7 +33,7 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
         fastestInterval = TimeUnit.SECONDS.toMillis(30) // 最速更新間隔(ms)
         maxWaitTime =
             TimeUnit.MINUTES.toMillis(2)// バッチロケーション更新が配信される最大時間を設定します。 更新は、この間隔よりも早く配信される場合があります。
-        priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        priority = Priority.PRIORITY_HIGH_ACCURACY
     }
     val locations = MutableLiveData<List<LocationData>>()
 
@@ -46,7 +46,7 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
     private val locationUpdatePendingIntent: PendingIntent by lazy {
         val intent = Intent(context, MyBackgroundLocationUpdatesBroadcastReceiver::class.java)
         intent.action = MyBackgroundLocationUpdatesBroadcastReceiver.ACTION_PROCESS_UPDATES
-        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_MUTABLE)
     }
 
     /**

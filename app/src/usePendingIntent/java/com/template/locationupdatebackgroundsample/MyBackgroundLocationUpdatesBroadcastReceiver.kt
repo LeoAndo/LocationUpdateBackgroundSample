@@ -37,7 +37,6 @@ class MyBackgroundLocationUpdatesBroadcastReceiver : BroadcastReceiver() {
                 }
             }
 
-            // ?でlint warning出てるけど、nullableの可能性あるので消しちゃだめ。
             LocationResult.extractResult(intent)?.let { locationResult ->
                 val locations = locationResult.locations.map { location ->
                     LocationData(
