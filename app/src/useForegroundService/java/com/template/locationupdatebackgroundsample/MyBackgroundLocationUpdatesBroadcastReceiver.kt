@@ -22,7 +22,7 @@ import java.util.*
  *  foreground.
  */
 class MyBackgroundLocationUpdatesBroadcastReceiver : BroadcastReceiver() {
-    private var myBackgroundLocationService: MyBackgroundLocationServiceImpl? = null
+    private var myBackgroundLocationService: MyBackgroundLocationService? = null
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive() context:$context, intent:$intent")
         myBackgroundLocationService = MyBackgroundLocationServiceImpl.getInstance(context)
