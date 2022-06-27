@@ -1,4 +1,4 @@
-# 概要
+# Overview
 Sample project for background location acquisition on Android 10 and above<br>
 
 It is better to get location information with the foreground service<br>
