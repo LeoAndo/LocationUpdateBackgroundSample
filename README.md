@@ -12,6 +12,7 @@ If the foreground service handles location information, you need to specify `loc
 [link1](https://developer.android.com/about/versions/10/features#fg-service-types)
 [link2](https://developer.android.com/about/versions/10/highlights#privacy_for_users)
 [link3](https://developer.android.com/about/versions/10/privacy/changes#app-access-device-location)
+[link4](https://developer.android.com/training/location/request-updates)
 
 # Check if you can get location information in the foreground / background of the app
 
