@@ -29,8 +29,8 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
         )
     private val locationRequest: LocationRequest = LocationRequest.create().apply {
         // 更新間隔(ms) OS:8以降のデバイス（targetSdkVersionに関係なく）ではアプリが存在しなくなったときに、この間隔よりも少ないintervalで更新を受信する.
-        interval = TimeUnit.SECONDS.toMillis(60)
-        fastestInterval = TimeUnit.SECONDS.toMillis(30) // 最速更新間隔(ms)
+        interval = TimeUnit.SECONDS.toMillis(5) // 5秒
+        fastestInterval = TimeUnit.SECONDS.toMillis(1) // 最速更新間隔(ms)
         maxWaitTime =
             TimeUnit.MINUTES.toMillis(2)// バッチロケーション更新が配信される最大時間を設定します。 更新は、この間隔よりも早く配信される場合があります。
         priority = Priority.PRIORITY_HIGH_ACCURACY

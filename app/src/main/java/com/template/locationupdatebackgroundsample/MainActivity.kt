@@ -31,7 +31,6 @@ class MainActivity : AppCompatActivity() {
     private val requestFineLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             Log.d(LOG_TAG, "granted: $granted")
-            myBackgroundLocationManager?.startLocationUpdates()
         }
     private val requestBackgroundLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -53,21 +52,25 @@ class MainActivity : AppCompatActivity() {
         binding.buttonAccessBackgroundLocation.setOnClickListener {
             requestBackgroundLocationPermission.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
         }
-        binding.buttonStart.setOnClickListener {
+
+        binding.buttonAccessFineLocation.setOnClickListener {
             /*
-            requestLocationPermissions.launch(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                )
-            )
-             */
+requestLocationPermissions.launch(
+    arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_BACKGROUND_LOCATION
+    )
+)
+ */
             requestFineLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+        }
+        binding.buttonStart.setOnClickListener {
+            myBackgroundLocationManager?.startLocationUpdates()
         }
         binding.buttonStop.setOnClickListener {
             myBackgroundLocationManager?.stopLocationUpdates()
         }
-        myBackgroundLocationManager?.locations?.observe(this, {
+        myBackgroundLocationManager?.locations?.observe(this) {
             Log.d(LOG_TAG, "observe")
             val text = StringBuilder()
             text.append(binding.textView.text).append("\n")
@@ -77,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             binding.textView.text = text
-        })
+        }
     }
 
     override fun onDestroy() {

@@ -25,10 +25,19 @@
         android:id="@+id/buttonAccessBackgroundLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ACCESS_BACKGROUND_LOCATION"
-        app:layout_constraintTop_toBottomOf="@+id/scroll"
+        android:text="request ACCESS_BACKGROUND_LOCATION"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scroll" />
+
+    <Button
+        android:id="@+id/buttonAccessFineLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="request ACCESS_FINE_LOCATION"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonAccessBackgroundLocation" />
 
     <Button
         android:id="@+id/buttonCheckLocationSetting"
@@ -38,13 +47,13 @@
         app:layout_constraintBottom_toTopOf="@+id/buttonStart"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonAccessBackgroundLocation" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonAccessFineLocation" />
 
     <Button
         android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="start"
+        android:text="start Location"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/buttonStop"
         app:layout_constraintHorizontal_bias="0.5"
