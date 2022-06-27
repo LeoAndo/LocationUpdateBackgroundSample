@@ -14,7 +14,7 @@ import com.template.locationupdatebackgroundsample.MyBackgroundLocationManager.C
 import com.template.locationupdatebackgroundsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private var myBackgroundLocationManager: MyBackgroundLocationManager? = null
+    private val myBackgroundLocationManager = MyBackgroundLocationManager.getInstance(this)
 
     // Android 11以上の場合、Manifest.permission.ACCESS_BACKGROUND_LOCATION パーミッションは他の権限と一緒に要求すべきではない。
     // https://stackoverflow.com/questions/66475027/activityresultlauncher-with-requestmultiplepermissions-contract-doesnt-show-per
@@ -41,10 +41,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        myBackgroundLocationManager = MyBackgroundLocationManager.getInstance(this)
 
         binding.buttonCheckLocationSetting.setOnClickListener {
-            myBackgroundLocationManager?.checkLocationSettings(this@MainActivity)
+            checkLocationSettings(myBackgroundLocationManager.locationRequest)
         }
 
         val isEnabledBKLocationButton: Boolean = (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT)
@@ -65,12 +64,12 @@ requestLocationPermissions.launch(
             requestFineLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         binding.buttonStart.setOnClickListener {
-            myBackgroundLocationManager?.startLocationUpdates()
+            myBackgroundLocationManager.startLocationUpdates()
         }
         binding.buttonStop.setOnClickListener {
-            myBackgroundLocationManager?.stopLocationUpdates()
+            myBackgroundLocationManager.stopLocationUpdates()
         }
-        myBackgroundLocationManager?.locations?.observe(this) {
+        myBackgroundLocationManager.locations.observe(this) {
             Log.d(LOG_TAG, "observe")
             val text = StringBuilder()
             text.append(binding.textView.text).append("\n")
@@ -84,7 +83,7 @@ requestLocationPermissions.launch(
     }
 
     override fun onDestroy() {
-        myBackgroundLocationManager?.stopLocationUpdates()
+        myBackgroundLocationManager.stopLocationUpdates()
         super.onDestroy()
     }
 

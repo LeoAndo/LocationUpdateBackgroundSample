@@ -8,8 +8,6 @@ import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationResult
 import java.util.*
 
-private const val TAG = "MyBackgroundLocationUpdatesBroadcastReceiver"
-
 /**
  * Receiver for handling location updates.
  *
@@ -57,5 +55,6 @@ class MyBackgroundLocationUpdatesBroadcastReceiver : BroadcastReceiver() {
 
     companion object {
         const val ACTION_PROCESS_UPDATES = BuildConfig.APPLICATION_ID + ".action.PROCESS_UPDATES"
+        private const val TAG = "MyBackgroundLocationUpdatesBroadcastReceiver"
     }
 }

@@ -49,7 +49,7 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
             Log.d(LOG_TAG, "isLocationAvailable: " + locationAvailability.isLocationAvailable)
         }
     }
-    private val locationRequest: LocationRequest = LocationRequest.create().apply {
+    val locationRequest: LocationRequest = LocationRequest.create().apply {
         // 更新間隔(ms) OS:8以降のデバイス（targetSdkVersionに関係なく）ではアプリが存在しなくなったときに、この間隔よりも少ないintervalで更新を受信する.
         interval = TimeUnit.SECONDS.toMillis(5) // 5秒
         fastestInterval = TimeUnit.SECONDS.toMillis(1) // 最速更新間隔(ms)
@@ -76,63 +76,6 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
         )
     }
 
-    fun checkLocationSettings(activity: Activity) {
-        val builder = LocationSettingsRequest.Builder().apply {
-            addLocationRequest(locationRequest)
-        }
-        val task: Task<LocationSettingsResponse> =
-            LocationServices.getSettingsClient(context).checkLocationSettings(builder.build())
-        task.addOnCompleteListener { task ->
-            kotlin.runCatching {
-                val response = task.getResult(ApiException::class.java)
-                // 位置情報設定が許可されている(正常系).
-                Log.d(LOG_TAG, "isBlePresent: " + response.locationSettingsStates?.isBlePresent)
-                Log.d(LOG_TAG, "isBleUsable: " + response.locationSettingsStates?.isBleUsable)
-                Log.d(LOG_TAG, "isGpsPresent: " + response.locationSettingsStates?.isGpsPresent)
-                Log.d(LOG_TAG, "isGpsUsable: " + response.locationSettingsStates?.isGpsUsable)
-                Log.d(
-                    LOG_TAG,
-                    "isLocationPresent: " + response.locationSettingsStates?.isLocationPresent
-                )
-                Log.d(
-                    LOG_TAG,
-                    "isLocationUsable: " + response.locationSettingsStates?.isLocationUsable
-                )
-                Log.d(
-                    LOG_TAG,
-                    "isNetworkLocationPresent: " + response.locationSettingsStates?.isNetworkLocationPresent
-                )
-                Log.d(
-                    LOG_TAG,
-                    "isNetworkLocationUsable: " + response.locationSettingsStates?.isNetworkLocationUsable
-                )
-            }.onFailure {
-                if (it !is ApiException) return@onFailure
-                when (it.statusCode) {
-                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                        Log.d(LOG_TAG, "statusCode: RESOLUTION_REQUIRED")
-                        // Location設定が許可されていないので、許可ダイアログを表示する
-                        try {
-                            // ダイアログを表示する. 処理結果は、onActivityResult()にコールバックされる
-                            val resolvable: ResolvableApiException? = it as? ResolvableApiException
-                            resolvable?.startResolutionForResult(
-                                activity,
-                                REQUEST_CHECK_SETTINGS
-                            )
-                        } catch (e: IntentSender.SendIntentException) {
-                            // Ignore the error.
-                            Log.e(LOG_TAG, "error: $e")
-                        }
-                    }
-                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        // 位置情報の設定変更が禁止されている。
-                        Log.d(LOG_TAG, "statusCode: SETTINGS_CHANGE_UNAVAILABLE")
-                    }
-                }
-            }
-        }
-    }
-
     @MainThread
     fun stopLocationUpdates() {
         locationClient.removeLocationUpdates(locationCallback)
@@ -141,7 +84,6 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
     companion object {
         const val LOG_TAG = "MyLocationManager"
 
-        @SuppressLint("StaticFieldLeak")
         @Volatile
         private var INSTANCE: MyBackgroundLocationManager? = null
         fun getInstance(context: Context): MyBackgroundLocationManager {
