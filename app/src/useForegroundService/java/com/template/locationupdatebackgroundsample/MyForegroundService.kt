@@ -24,11 +24,6 @@ class MyForegroundService : Service() {
         myBackgroundLocationService =
             MyBackgroundLocationServiceImpl.getInstance(this)
         notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(
-            id = CHANNEL_ID_BACKGROUND_LOCATION,
-            name = "background location channel",
-            importance = NotificationManager.IMPORTANCE_DEFAULT
-        )
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
