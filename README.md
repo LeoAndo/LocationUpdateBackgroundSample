@@ -24,7 +24,7 @@ If the foreground service handles location information, you need to specify `loc
 |Pixel 4 OS:10 | OK | OK |
 
 ## capture Pixel 4 OS:10
-<img src="https://user-images.githubusercontent.com/16476224/121790680-a8ea2580-cc1c-11eb-9a09-60137d6c13d8.png" width=320/>
+<img src="https://github.com/LeoAndo/LocationUpdateBackgroundSample/blob/main/capture.png" width=320/>
 
 # Implemantation(Memo)
 
