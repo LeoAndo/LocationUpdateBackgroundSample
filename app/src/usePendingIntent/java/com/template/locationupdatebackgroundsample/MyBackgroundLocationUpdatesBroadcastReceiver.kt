@@ -22,10 +22,10 @@ import java.util.*
  *  foreground.
  */
 class MyBackgroundLocationUpdatesBroadcastReceiver : BroadcastReceiver() {
-    private var myBackgroundLocationManager: MyBackgroundLocationManager? = null
+    private var myBackgroundLocationManager: MyBackgroundLocationServiceImpl? = null
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "onReceive() context:$context, intent:$intent")
-        myBackgroundLocationManager = MyBackgroundLocationManager.getInstance(context)
+        myBackgroundLocationManager = MyBackgroundLocationServiceImpl.getInstance(context)
         if (intent.action == ACTION_PROCESS_UPDATES) {
 
             // Checks for location availability changes. ?でlint warning出てるけど、nullableの可能性あるので消しちゃだめ。

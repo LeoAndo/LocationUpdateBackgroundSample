@@ -10,11 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.LocationSettingsStates
-import com.template.locationupdatebackgroundsample.MyBackgroundLocationManager.Companion.REQUEST_CHECK_SETTINGS
+import com.template.locationupdatebackgroundsample.MyBackgroundLocationService.Companion.REQUEST_CHECK_SETTINGS
 import com.template.locationupdatebackgroundsample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-    private val myBackgroundLocationManager = MyBackgroundLocationManager.getInstance(this)
+    private lateinit var myBackgroundLocationService: MyBackgroundLocationService
 
     // Android 11以上の場合、Manifest.permission.ACCESS_BACKGROUND_LOCATION パーミッションは他の権限と一緒に要求すべきではない。
     // https://stackoverflow.com/questions/66475027/activityresultlauncher-with-requestmultiplepermissions-contract-doesnt-show-per
@@ -41,9 +41,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        myBackgroundLocationService = MyBackgroundLocationServiceImpl.getInstance(this)
 
         binding.buttonCheckLocationSetting.setOnClickListener {
-            checkLocationSettings(myBackgroundLocationManager.locationRequest)
+            checkLocationSettings(myBackgroundLocationService.locationRequest)
         }
 
         val isEnabledBKLocationButton: Boolean = (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT)
@@ -64,12 +65,12 @@ requestLocationPermissions.launch(
             requestFineLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         binding.buttonStart.setOnClickListener {
-            myBackgroundLocationManager.startLocationUpdates()
+            myBackgroundLocationService.startLocationUpdates()
         }
         binding.buttonStop.setOnClickListener {
-            myBackgroundLocationManager.stopLocationUpdates()
+            myBackgroundLocationService.stopLocationUpdates()
         }
-        myBackgroundLocationManager.locations.observe(this) {
+        myBackgroundLocationService.locations.observe(this) {
             Log.d(LOG_TAG, "observe")
             val text = StringBuilder()
             text.append(binding.textView.text).append("\n")
@@ -77,13 +78,12 @@ requestLocationPermissions.launch(
                 text.append("lat: ${locationData.latitude} lon: ${locationData.longitude} isAppForeground: ${locationData.isAppForeground} date: ${locationData.date}")
                 text.append("\n")
             }
-
             binding.textView.text = text
         }
     }
 
     override fun onDestroy() {
-        myBackgroundLocationManager.stopLocationUpdates()
+        myBackgroundLocationService.stopLocationUpdates()
         super.onDestroy()
     }
 

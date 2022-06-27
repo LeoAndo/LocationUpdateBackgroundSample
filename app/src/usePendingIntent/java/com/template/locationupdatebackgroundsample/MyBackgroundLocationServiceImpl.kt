@@ -1,14 +1,12 @@
 package com.template.locationupdatebackgroundsample
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
-import androidx.annotation.MainThread
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.*
@@ -17,20 +15,20 @@ import java.util.concurrent.TimeUnit
 /**
  * PendingIntentを使うパターン
  */
-class MyBackgroundLocationManager private constructor(private val context: Context) {
-    private val locationClient: FusedLocationProviderClient
-        get() = LocationServices.getFusedLocationProviderClient(
-            context
-        )
-    val locationRequest: LocationRequest = LocationRequest.create().apply {
-        // 更新間隔(ms) OS:8以降のデバイス（targetSdkVersionに関係なく）ではアプリが存在しなくなったときに、この間隔よりも少ないintervalで更新を受信する.
-        interval = TimeUnit.SECONDS.toMillis(5) // 5秒
-        fastestInterval = TimeUnit.SECONDS.toMillis(1) // 最速更新間隔(ms)
-        maxWaitTime =
-            TimeUnit.MINUTES.toMillis(2)// バッチロケーション更新が配信される最大時間を設定します。 更新は、この間隔よりも早く配信される場合があります。
-        priority = Priority.PRIORITY_HIGH_ACCURACY
+class MyBackgroundLocationServiceImpl private constructor(private val context: Context) :
+    MyBackgroundLocationService {
+    override val locationClient by lazy { LocationServices.getFusedLocationProviderClient(context) }
+    override val locationRequest by lazy {
+        LocationRequest.create().apply {
+            // 更新間隔(ms) OS:8以降のデバイス（targetSdkVersionに関係なく）ではアプリが存在しなくなったときに、この間隔よりも少ないintervalで更新を受信する.
+            interval = TimeUnit.SECONDS.toMillis(5) // 5秒
+            fastestInterval = TimeUnit.SECONDS.toMillis(1) // 最速更新間隔(ms)
+            maxWaitTime =
+                TimeUnit.MINUTES.toMillis(2)// バッチロケーション更新が配信される最大時間を設定します。 更新は、この間隔よりも早く配信される場合があります。
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+        }
     }
-    val locations = MutableLiveData<List<LocationData>>()
+    override val locations by lazy { MutableLiveData<List<LocationData>>() }
 
     /**
      * Creates default PendingIntent for location changes.
@@ -51,8 +49,7 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
      * @throws SecurityException if ACCESS_FINE_LOCATION permission is removed before the
      * FusedLocationClient's requestLocationUpdates() has been completed.
      */
-    @MainThread
-    fun startLocationUpdates() {
+    override fun startLocationUpdates() {
         Log.d(LOG_TAG, "startLocationUpdates")
         if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
                 context,
@@ -77,9 +74,7 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
         }
     }
 
-
-    @MainThread
-    fun stopLocationUpdates() {
+    override fun stopLocationUpdates() {
         Log.d(LOG_TAG, "stopLocationUpdates()")
         locationClient.removeLocationUpdates(locationUpdatePendingIntent)
     }
@@ -87,15 +82,12 @@ class MyBackgroundLocationManager private constructor(private val context: Conte
     companion object {
         const val LOG_TAG = "MyBackgroundLocationManager"
 
-        @SuppressLint("StaticFieldLeak")
         @Volatile
-        private var INSTANCE: MyBackgroundLocationManager? = null
-        fun getInstance(context: Context): MyBackgroundLocationManager {
+        private var INSTANCE: MyBackgroundLocationServiceImpl? = null
+        fun getInstance(context: Context): MyBackgroundLocationServiceImpl {
             return INSTANCE ?: synchronized(this) {
-                INSTANCE ?: MyBackgroundLocationManager(context).also { INSTANCE = it }
+                INSTANCE ?: MyBackgroundLocationServiceImpl(context).also { INSTANCE = it }
             }
         }
-
-        const val REQUEST_CHECK_SETTINGS: Int = 100
     }
 }

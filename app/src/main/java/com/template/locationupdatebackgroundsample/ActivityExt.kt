@@ -48,7 +48,7 @@ fun Activity.checkLocationSettings(locationRequest: LocationRequest) {
                         val resolvable: ResolvableApiException? = it as? ResolvableApiException
                         resolvable?.startResolutionForResult(
                             this,
-                            MyBackgroundLocationManager.REQUEST_CHECK_SETTINGS
+                            MyBackgroundLocationService.REQUEST_CHECK_SETTINGS
                         )
                     } catch (e: IntentSender.SendIntentException) {
                         // Ignore the error.
