@@ -22,7 +22,7 @@ In that case, you need to specify `location` in [foregroundServiceType] (https:/
 
 | device | foreground | background |
 |:---|:---:|:---|
-|Pixel 4 OS:13 | OK | OK |
+|Pixel 4 OS:13 |  |  |
 |Pixel 4 OS:12 | OK | OK |
 |Pixel 4 OS:10 | OK | OK |
 
