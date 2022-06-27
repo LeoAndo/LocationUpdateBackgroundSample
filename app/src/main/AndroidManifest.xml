@@ -3,6 +3,8 @@
     package="com.template.locationupdatebackgroundsample">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- If you need access to FINE location, you must request both ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION の対策-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"

@@ -1,15 +1,12 @@
 package com.template.locationupdatebackgroundsample
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.location.LocationSettingsStates
 import com.template.locationupdatebackgroundsample.MyBackgroundLocationService.Companion.REQUEST_CHECK_SETTINGS
 import com.template.locationupdatebackgroundsample.databinding.ActivityMainBinding
 
@@ -29,8 +26,18 @@ class MainActivity : AppCompatActivity() {
 
      */
     private val requestFineLocationPermission =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            Log.d(LOG_TAG, "granted: $granted")
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            when {
+                permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false) -> {
+                    Log.d(LOG_TAG, "Precise location access granted.")
+                }
+                permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false) -> {
+                    Log.d(LOG_TAG, "Only approximate location access granted.")
+                }
+                else -> {
+                    Log.d(LOG_TAG, "No location access granted.")
+                }
+            }
         }
     private val requestBackgroundLocationPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -62,7 +69,12 @@ requestLocationPermissions.launch(
     )
 )
  */
-            requestFineLocationPermission.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            requestFineLocationPermission.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
         }
         binding.buttonStart.setOnClickListener {
             myBackgroundLocationService.startLocationUpdates()
@@ -91,24 +103,7 @@ requestLocationPermissions.launch(
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_CHECK_SETTINGS -> {
-                val message = when (resultCode) {
-                    Activity.RESULT_OK -> {
-                        "All required changes were successfully made."
-                    }
-                    Activity.RESULT_CANCELED -> {
-                        "The user was asked to change settings, but chose not to"
-                    }
-                    else -> "unknown..."
-                }
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
-                if (resultCode == Activity.RESULT_OK) {
-                    // クライアントが使用可能なロケーションプロバイダーに関心がある場合は、
-                    // LocationSettingsStates.fromIntent（Intent）を呼び出すことにより取得可能です。
-                    val states: LocationSettingsStates? =
-                        data?.let { LocationSettingsStates.fromIntent(it) }
-                    Log.d(LOG_TAG, "isGpsPresent: " + states?.isGpsPresent)
-                    Log.d(LOG_TAG, "isGpsUsable: " + states?.isGpsUsable)
-                }
+                handleActivityResultCheckSettings(resultCode, data)
             }
         }
     }

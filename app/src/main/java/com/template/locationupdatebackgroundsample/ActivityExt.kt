@@ -1,6 +1,7 @@
 package com.template.locationupdatebackgroundsample
 
 import android.app.Activity
+import android.content.Intent
 import android.content.IntentSender
 import android.util.Log
 import android.widget.Toast
@@ -8,6 +9,28 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
+
+fun Activity.handleActivityResultCheckSettings(resultCode: Int, data: Intent?) {
+    val LOG_TAG = "handleActivityResultCheckSettings"
+    val message = when (resultCode) {
+        Activity.RESULT_OK -> {
+            "All required changes were successfully made."
+        }
+        Activity.RESULT_CANCELED -> {
+            "The user was asked to change settings, but chose not to"
+        }
+        else -> "unknown..."
+    }
+    Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    if (resultCode == Activity.RESULT_OK) {
+        // クライアントが使用可能なロケーションプロバイダーに関心がある場合は、
+        // LocationSettingsStates.fromIntent（Intent）を呼び出すことにより取得可能です。
+        val states: LocationSettingsStates? =
+            data?.let { LocationSettingsStates.fromIntent(it) }
+        Log.d(LOG_TAG, "isGpsPresent: " + states?.isGpsPresent)
+        Log.d(LOG_TAG, "isGpsUsable: " + states?.isGpsUsable)
+    }
+}
 
 fun Activity.checkLocationSettings(locationRequest: LocationRequest) {
     val LOG_TAG = "checkLocationSettings"
