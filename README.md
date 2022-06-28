@@ -1,4 +1,7 @@
 # Overview
+
+[日本語版ReadMeはこちら！](https://github.com/LeoAndo/LocationUpdateBackgroundSample/blob/main/readme/README_JP.md)
+
 Sample project for background location acquisition on Android 10 and above<br>
 
 It is better to get location information with the foreground service<br>
